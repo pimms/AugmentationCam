@@ -396,6 +396,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 	    	(float)Math.toDegrees(fusedOrientation[1]),
 	    	(float)Math.toDegrees(fusedOrientation[2])
     	);
+    	
+    	mRenderer.setGyroMatrix(gyroMatrix);
     }
     
     private Runnable updateOreintationDisplayTask = new Runnable() {
