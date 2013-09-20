@@ -135,21 +135,20 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onStop() {
     	super.onStop();
-    	// unregister sensor listeners to prevent the activity from draining the device's battery.
     	mSensorManager.unregisterListener(this);
     }
 	
     @Override
     protected void onPause() {
         super.onPause();
-        // unregister sensor listeners to prevent the activity from draining the device's battery.
+        mGlView.onResume();
         mSensorManager.unregisterListener(this);
     }
     
     @Override
     public void onResume() {
     	super.onResume();
-    	// restore the sensor listeners when user resumes the application.
+    	mGlView.onResume();
     	initListeners();
     }
     
@@ -391,13 +390,13 @@ public class MainActivity extends Activity implements SensorEventListener {
     // **************************** GUI FUNCTIONS *********************************
     
     private void updateOrientation() {
+    	mRenderer.setGyroMatrix(gyroMatrix);
     	mRenderer.setRotationEuler(
 	    	(float)Math.toDegrees(fusedOrientation[0]),
 	    	(float)Math.toDegrees(fusedOrientation[1]),
-	    	(float)Math.toDegrees(fusedOrientation[2])
-    	);
+	    	(float)Math.toDegrees(fusedOrientation[2]));
     	
-    	mRenderer.setGyroMatrix(gyroMatrix);
+    	
     }
     
     private Runnable updateOreintationDisplayTask = new Runnable() {

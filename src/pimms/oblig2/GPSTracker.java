@@ -27,11 +27,7 @@ public class GPSTracker extends Service implements LocationListener {
 		mContext = ctx;
 		mLocationManager = (LocationManager)mContext.getSystemService(LOCATION_SERVICE);
 		
-		if (servicesAvailable()) {
-			subscribeLocation();
-		} else {
-			Log.e("DBG", "GPS services are not available");
-		}
+		onResume();
 	}
 	
 	/*
@@ -71,8 +67,6 @@ public class GPSTracker extends Service implements LocationListener {
 		Location tmpLocation = mLocationManager.getLastKnownLocation(mGpsProvider);
 		if (tmpLocation != null) {
 			mLocation = tmpLocation;
-		} else {
-			Log.d(TAG, "Last known location is null (" + mGpsProvider + ")");
 		}
 		
 		return mLocation;
@@ -80,8 +74,21 @@ public class GPSTracker extends Service implements LocationListener {
 	
 	
 	private void subscribeLocation() {
-		mLocationManager.requestLocationUpdates(mGpsProvider, 10000, 10, this);
+		// request updates as often as possible
+		mLocationManager.requestLocationUpdates(mGpsProvider, 0, 0, this);
 		mLocSubscription = true;
+	}
+	
+	public void onPause() {
+		mLocationManager.removeUpdates(this);
+	}
+	
+	public void onResume() {
+		if (servicesAvailable()) {
+			subscribeLocation();
+		} else {
+			Log.e("DBG", "GPS services are not available");
+		}
 	}
 	
 	@Override
