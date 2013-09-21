@@ -33,12 +33,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RadioGroup;
 
 
 public class MainActivity extends Activity implements SensorEventListener {
@@ -83,6 +83,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private GLOverlayRenderer mRenderer;
 	private CameraView mCameraView;
 	
+	private GPSTracker mGpsTracker;
+	private Location mModelLocation;
+	
 	public static float X;
 	public static float Y;
 	public static float Z;
@@ -106,7 +109,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         
         // wait for one second until gyroscope and magnetometer/accelerometer
         // data is initialised then scedule the complementary filter task
-        fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(),
+        fuseTimer.scheduleAtFixedRate(new calculateOrientationAndPositionTask(),
                                       1000, TIME_CONSTANT);
         
         // GUI stuff
@@ -130,18 +133,29 @@ public class MainActivity extends Activity implements SensorEventListener {
         // Add the camera view
         mCameraView = new CameraView( this );
         addContentView( mCameraView, new LayoutParams( LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT ) );
+        
+        // Create the GPS objects
+        mModelLocation = new Location("gps");
+        mModelLocation.setLatitude(60.784591);
+        mModelLocation.setLongitude(10.690417);
+        mRenderer.setModelLocation(mModelLocation);
+        
+        mGpsTracker = new GPSTracker(this);
     }
     
     @Override
     public void onStop() {
     	super.onStop();
+    	mGlView.onPause();
+        mGpsTracker.onPause();
     	mSensorManager.unregisterListener(this);
     }
 	
     @Override
     protected void onPause() {
         super.onPause();
-        mGlView.onResume();
+        mGlView.onPause();
+        mGpsTracker.onPause();
         mSensorManager.unregisterListener(this);
     }
     
@@ -149,6 +163,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     public void onResume() {
     	super.onResume();
     	mGlView.onResume();
+    	mGpsTracker.onResume();
     	initListeners();
     }
     
@@ -325,9 +340,19 @@ public class MainActivity extends Activity implements SensorEventListener {
         return result;
     }
     
-    class calculateFusedOrientationTask extends TimerTask {
+    class calculateOrientationAndPositionTask extends TimerTask {
         public void run() {
-            float oneMinusCoeff = 1.0f - FILTER_COEFFICIENT;
+        	calculateOrientation();
+        	updatePositions();
+        	
+            gyroMatrix = getRotationMatrixFromOrientation(fusedOrientation);
+            System.arraycopy(fusedOrientation, 0, gyroOrientation, 0, 3);
+            
+            mHandler.post(updateOreintationDisplayTask);
+        }
+        
+        private void calculateOrientation() {
+        	float oneMinusCoeff = 1.0f - FILTER_COEFFICIENT;
             
             /*
              * Fix for 179° <--> -179° transition problem:
@@ -374,15 +399,10 @@ public class MainActivity extends Activity implements SensorEventListener {
             else {
             	fusedOrientation[2] = FILTER_COEFFICIENT * gyroOrientation[2] + oneMinusCoeff * accMagOrientation[2];
             }
-     
-            // overwrite gyro matrix and orientation with fused orientation
-            // to comensate gyro drift
-            gyroMatrix = getRotationMatrixFromOrientation(fusedOrientation);
-            System.arraycopy(fusedOrientation, 0, gyroOrientation, 0, 3);
-            
-            
-            // update sensor output in GUI
-            mHandler.post(updateOreintationDisplayTask);
+        }
+        
+        private void updatePositions() {
+        	mRenderer.setDeviceLocation(mGpsTracker.getLocation());
         }
     }
     

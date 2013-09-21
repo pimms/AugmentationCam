@@ -7,15 +7,22 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.location.Location;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 import android.util.Log;
 
 public class GLOverlayRenderer implements Renderer {
+	public static final double METERS_PER_LON = 55799.979000000014;
+	public static final double METERS_PER_LAT = 111412.24020000001;
+	
 	private FloatBuffer mVertexBuffer;
 	private float[] mRotEuler = new float[3];
 	private float[] mRotMatrix = new float[16];
-	private int mFrameCount;
+	
+	Location mModelLocation;
+	Location mDeviceLocation;
+	private float[] mModelTranslation = new float[3];
 	
 	public GLOverlayRenderer() {
 		ByteBuffer byteBuffer =	ByteBuffer.allocateDirect(cubeVertices.length * 4);
@@ -33,9 +40,10 @@ public class GLOverlayRenderer implements Renderer {
         gl.glLoadIdentity();
         	
         gl.glRotatef(-mRotEuler[1], 0f, 0f, 1f);
-        gl.glRotatef( mRotEuler[0], 0f, 1f, 0f);
         gl.glRotatef( mRotEuler[2]+90, 1f, 0f, 0f);
-        gl.glTranslatef(0f, 0f, -10f);
+        gl.glRotatef( mRotEuler[0], 0f, 1f, 0f);
+        
+        gl.glTranslatef(mModelTranslation[0], mModelTranslation[1], mModelTranslation[2]);
         
         gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
         gl.glDrawArrays(GL10.GL_TRIANGLES, 0, cubeVertices.length/3);
@@ -89,6 +97,50 @@ public class GLOverlayRenderer implements Renderer {
     	mRotEuler[0] = x;
     	mRotEuler[1] = y;
     	mRotEuler[2] = z;
+    }
+    
+    public void setDeviceLocation(Location location) {
+    	if (mDeviceLocation == null && mModelLocation != null) {
+    		mModelLocation.setAltitude(location.getAltitude() - 1.8);
+    		mDeviceLocation = location;
+    	}
+    	
+    	calculateModelTranslation();
+    }
+    
+    public void setModelLocation(Location location) {
+    	mModelLocation = location;
+    	calculateModelTranslation();
+    }
+    
+    private void calculateModelTranslation() {
+    	if (mDeviceLocation == null || mModelLocation == null) {
+    		return;
+    	}
+    	
+    	double latDev = mDeviceLocation.getLatitude();
+    	double lonDev = mDeviceLocation.getLongitude();
+    	double altDev = mDeviceLocation.getAltitude();
+    	
+    	double latMod = mModelLocation.getLatitude();
+    	double lonMod = mModelLocation.getLongitude();
+    	double altMod = mModelLocation.getAltitude();
+    	
+    	double latDiff = latMod - latDev;
+    	double lonDiff = lonMod - lonDev;
+    	double altDiff = altMod - altDev;
+    	
+    	latDiff *= METERS_PER_LAT;
+    	lonDiff *= METERS_PER_LON;
+    	
+    	// X maps to longitude.
+    	// Y maps to altitude.
+    	// Z maps to latitude.
+    	mModelTranslation[0] = (float)lonDiff;
+    	mModelTranslation[1] = (float)altDiff;
+    	mModelTranslation[2] = (float)latDiff;
+    	
+    	Log.e("DBG", "Position: " + mModelTranslation[0] + mModelTranslation[1] + ", " + mModelTranslation[2]);
     }
 	
 	// The prettiest cube in ALL of the lands!
