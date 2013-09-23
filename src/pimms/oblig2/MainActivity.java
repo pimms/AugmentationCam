@@ -348,7 +348,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             gyroMatrix = getRotationMatrixFromOrientation(fusedOrientation);
             System.arraycopy(fusedOrientation, 0, gyroOrientation, 0, 3);
             
-            mHandler.post(updateOreintationDisplayTask);
+            mHandler.post(updateOrientationTask);
         }
         
         private void calculateOrientation() {
@@ -419,7 +419,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     	
     }
     
-    private Runnable updateOreintationDisplayTask = new Runnable() {
+    private Runnable updateOrientationTask = new Runnable() {
 		public void run() {
 			updateOrientation();
 		}
