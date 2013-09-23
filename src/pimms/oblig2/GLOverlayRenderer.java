@@ -36,7 +36,7 @@ public class GLOverlayRenderer implements Renderer {
         
         gl.glPushMatrix();
         gl.glLoadIdentity();
-        	
+        
         gl.glRotatef(-mRotEuler[1], 0f, 0f, 1f);
         gl.glRotatef( mRotEuler[2]+90, 1f, 0f, 0f);
         gl.glRotatef( mRotEuler[0], 0f, 1f, 0f);

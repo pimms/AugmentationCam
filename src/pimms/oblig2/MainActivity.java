@@ -25,7 +25,6 @@ package pimms.oblig2;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
@@ -33,15 +32,17 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Location;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
 
-public class MainActivity extends Activity implements SensorEventListener {
+public class MainActivity extends Activity implements SensorEventListener, OnClickListener {
     
 	private SensorManager mSensorManager = null;
 	
@@ -83,13 +84,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private GLOverlayRenderer mRenderer;
 	private CameraView mCameraView;
 	
-	public static float X;
-	public static float Y;
-	public static float Z;
+	private float[] mDevicePosition = new float[3];
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE );
+        
+        requestWindowFeature( Window.FEATURE_NO_TITLE );
+        getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                                WindowManager.LayoutParams.FLAG_FULLSCREEN );
+        
+        setContentView(R.layout.activity_main);
         
         gyroOrientation[0] = 0.0f;
         gyroOrientation[1] = 0.0f;
@@ -102,7 +109,7 @@ public class MainActivity extends Activity implements SensorEventListener {
  
         // get sensorManager and initialise sensor listeners
         mSensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
-        initListeners();
+        initSensorListeners();
         
         // wait for one second until gyroscope and magnetometer/accelerometer
         // data is initialised then scedule the complementary filter task
@@ -112,24 +119,16 @@ public class MainActivity extends Activity implements SensorEventListener {
         // GUI stuff
         mHandler = new Handler();
         
-        setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE );
-        
-        requestWindowFeature( Window.FEATURE_NO_TITLE );
-        getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                                WindowManager.LayoutParams.FLAG_FULLSCREEN );
-     
-        
         // Create an openGL view and set it as the main layout
-        mGlView = new GLSurfaceView( this );
+        mGlView = (GLSurfaceView)findViewById(R.id.glView);
         mGlView.setEGLConfigChooser( 8, 8, 8, 8, 16, 0 );
         mGlView.getHolder().setFormat( PixelFormat.TRANSLUCENT );
         mRenderer = new GLOverlayRenderer();
         mGlView.setRenderer(mRenderer);
-        setContentView( mGlView );
+        
+        mRenderer.setDeviceLocation(new float[] { 0f, 0f, 10f } );
      
-        // Add the camera view
-        mCameraView = new CameraView( this );
-        addContentView( mCameraView, new LayoutParams( LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT ) );
+        initButtonListeners();
     }
     
     @Override
@@ -150,11 +149,53 @@ public class MainActivity extends Activity implements SensorEventListener {
     public void onResume() {
     	super.onResume();
     	mGlView.onResume();
-    	initListeners();
+    	initSensorListeners();
+    }
+    
+    
+    @Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.button_backward:
+			translateDevicePos(0f, 1f);
+			break;
+			
+		case R.id.button_forward:
+			translateDevicePos(0f, -1f);
+			break;
+			
+		case R.id.button_left:
+			translateDevicePos(-1f, 0f);
+			break;
+			
+		case R.id.button_right:
+			translateDevicePos(1f, 0f);
+			break;
+			
+		case R.id.button_down:
+			mDevicePosition[1] -= 1.f;
+			break;
+			
+		case R.id.button_up:
+			mDevicePosition[1] += 1.f;
+			break;
+		}
+		
+		mRenderer.setDeviceLocation(mDevicePosition);
+	}
+    
+    private void translateDevicePos(float x, float z) {
+    	float yRot = fusedOrientation[0];
+    	
+    	float dx = (float)(x*Math.cos(yRot) - z*Math.sin(yRot));
+    	float dz = (float)(z*Math.cos(yRot) + x*Math.sin(yRot));
+    	
+    	mDevicePosition[0] += dx;
+    	mDevicePosition[2] += dz;
     }
     
     // This function registers sensor listeners for the accelerometer, magnetometer and gyroscope.
-    public void initListeners(){
+    private void initSensorListeners(){
         mSensorManager.registerListener(this,
             mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
             SensorManager.SENSOR_DELAY_FASTEST);
@@ -166,6 +207,26 @@ public class MainActivity extends Activity implements SensorEventListener {
         mSensorManager.registerListener(this,
             mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
             SensorManager.SENSOR_DELAY_FASTEST);
+    }
+    
+    private void initButtonListeners() {
+    	Button left = (Button)findViewById(R.id.button_left);
+    	left.setOnClickListener(this);
+    	
+    	Button right = (Button)findViewById(R.id.button_right);
+    	right.setOnClickListener(this);
+    	
+    	Button backward = (Button)findViewById(R.id.button_backward);
+    	backward.setOnClickListener(this);
+    	
+    	Button forward = (Button)findViewById(R.id.button_forward);
+    	forward.setOnClickListener(this);
+    	
+    	Button up = (Button)findViewById(R.id.button_up);
+    	up.setOnClickListener(this);
+    	
+    	Button down = (Button)findViewById(R.id.button_down);
+    	down.setOnClickListener(this);
     }
 
 	@Override
