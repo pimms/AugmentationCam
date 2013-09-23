@@ -20,9 +20,7 @@ public class GLOverlayRenderer implements Renderer {
 	private float[] mRotEuler = new float[3];
 	private float[] mRotMatrix = new float[16];
 	
-	Location mModelLocation;
-	Location mDeviceLocation;
-	private float[] mModelTranslation = new float[3];
+	private float[] mDevicePosition = new float[3];
 	
 	public GLOverlayRenderer() {
 		ByteBuffer byteBuffer =	ByteBuffer.allocateDirect(cubeVertices.length * 4);
@@ -43,7 +41,7 @@ public class GLOverlayRenderer implements Renderer {
         gl.glRotatef( mRotEuler[2]+90, 1f, 0f, 0f);
         gl.glRotatef( mRotEuler[0], 0f, 1f, 0f);
         
-        gl.glTranslatef(mModelTranslation[0], mModelTranslation[1], mModelTranslation[2]);
+        gl.glTranslatef(-mDevicePosition[0], -mDevicePosition[1], -mDevicePosition[2]);
         
         gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
         gl.glDrawArrays(GL10.GL_TRIANGLES, 0, cubeVertices.length/3);
@@ -99,50 +97,11 @@ public class GLOverlayRenderer implements Renderer {
     	mRotEuler[2] = z;
     }
     
-    public void setDeviceLocation(Location location) {
-    	if (mDeviceLocation == null && mModelLocation != null) {
-    		mModelLocation.setAltitude(location.getAltitude() - 1.8);
-    		mDeviceLocation = location;
-    	}
-    	
-    	calculateModelTranslation();
+    public void setDeviceLocation(float[] position) {
+    	assert(position.length == 3);
+    	mDevicePosition = position.clone();
     }
-    
-    public void setModelLocation(Location location) {
-    	mModelLocation = location;
-    	calculateModelTranslation();
-    }
-    
-    private void calculateModelTranslation() {
-    	if (mDeviceLocation == null || mModelLocation == null) {
-    		return;
-    	}
     	
-    	double latDev = mDeviceLocation.getLatitude();
-    	double lonDev = mDeviceLocation.getLongitude();
-    	double altDev = mDeviceLocation.getAltitude();
-    	
-    	double latMod = mModelLocation.getLatitude();
-    	double lonMod = mModelLocation.getLongitude();
-    	double altMod = mModelLocation.getAltitude();
-    	
-    	double latDiff = latMod - latDev;
-    	double lonDiff = lonMod - lonDev;
-    	double altDiff = altMod - altDev;
-    	
-    	latDiff *= METERS_PER_LAT;
-    	lonDiff *= METERS_PER_LON;
-    	
-    	// X maps to longitude.
-    	// Y maps to altitude.
-    	// Z maps to latitude.
-    	mModelTranslation[0] = (float)lonDiff;
-    	mModelTranslation[1] = (float)altDiff;
-    	mModelTranslation[2] = (float)latDiff;
-    	
-    	Log.e("DBG", "Position: " + mModelTranslation[0] + mModelTranslation[1] + ", " + mModelTranslation[2]);
-    }
-	
 	// The prettiest cube in ALL of the lands!
 	private static float[] cubeVertices = {
 		-1.0f,-1.0f,-1.0f, // triangle 1 : begin
