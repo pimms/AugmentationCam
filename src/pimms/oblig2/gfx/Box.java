@@ -11,6 +11,11 @@ public class Box extends Object3D {
 		return sCubeVertices;
 	}
 	
+	@Override
+	float[] getColors() {
+		return null;
+	}
+	
 	private static float[] sCubeVertices = {
 		-1.0f,-1.0f,-1.0f,
 	    -1.0f,-1.0f, 1.0f,

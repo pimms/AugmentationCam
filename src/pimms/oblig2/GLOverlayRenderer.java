@@ -61,9 +61,10 @@ public class GLOverlayRenderer implements Renderer {
     	gl.glShadeModel(GL10.GL_SMOOTH);
     	gl.glDisable(GL10.GL_DITHER);
     	
+    	// Vertex Arrays are required for all objects,
+    	// so it's always enabled. Other client states
+    	// must be handled by Object3D objects manually.
     	gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-    	gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
-    	gl.glDisableClientState(GL10.GL_NORMAL_ARRAY);
     	
     	mScene = new Scene3D(gl);
     }  

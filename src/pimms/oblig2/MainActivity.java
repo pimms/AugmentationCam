@@ -83,7 +83,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnCli
 	private GLSurfaceView mGlView;
 	private GLOverlayRenderer mRenderer;
 	
-	private float[] mDevicePosition = new float[3];
+	private float[] mDevicePosition;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,7 +125,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnCli
         mRenderer = new GLOverlayRenderer();
         mGlView.setRenderer(mRenderer);
         
-        mRenderer.setDeviceLocation(new float[] { 0f, 0f, 10f } );
+        mDevicePosition = new float[] { -10f, 0f, 0f };
+        mRenderer.setDeviceLocation(mDevicePosition);
      
         initButtonListeners();
     }
