@@ -82,7 +82,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnCli
 	public Handler mHandler;
 	private GLSurfaceView mGlView;
 	private GLOverlayRenderer mRenderer;
-	private CameraView mCameraView;
 	
 	private float[] mDevicePosition = new float[3];
 	
