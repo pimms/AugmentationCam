@@ -1,37 +1,29 @@
 package pimms.oblig2;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.location.Location;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 import android.util.Log;
+
+import pimms.oblig2.gfx.*;
 
 public class GLOverlayRenderer implements Renderer {
 	public static final double METERS_PER_LON = 55799.979000000014;
 	public static final double METERS_PER_LAT = 111412.24020000001;
 	
-	private FloatBuffer mVertexBuffer;
 	private float[] mRotEuler = new float[3];
 	private float[] mRotMatrix = new float[16];
-	
 	private float[] mDevicePosition = new float[3];
+
+	private Scene3D mScene;
 	
 	public GLOverlayRenderer() {
-		ByteBuffer byteBuffer =	ByteBuffer.allocateDirect(cubeVertices.length * 4);
-		byteBuffer.order(ByteOrder.nativeOrder());
 		
-    	mVertexBuffer = byteBuffer.asFloatBuffer();
-    	mVertexBuffer.put(cubeVertices);
-    	mVertexBuffer.position(0);
 	}
 	
-	public void onDrawFrame( GL10 gl ) {
+	public void onDrawFrame(GL10 gl) {
         gl.glClear( GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT );
         
         gl.glPushMatrix();
@@ -43,9 +35,7 @@ public class GLOverlayRenderer implements Renderer {
         
         gl.glTranslatef(-mDevicePosition[0], -mDevicePosition[1], -mDevicePosition[2]);
         
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
-        gl.glDrawArrays(GL10.GL_TRIANGLES, 0, cubeVertices.length/3);
-        mVertexBuffer.position(0);
+        mScene.drawScene(gl);
         
         gl.glPopMatrix();
     }
@@ -74,6 +64,8 @@ public class GLOverlayRenderer implements Renderer {
     	gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
     	gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
     	gl.glDisableClientState(GL10.GL_NORMAL_ARRAY);
+    	
+    	mScene = new Scene3D(gl);
     }  
 
     public void setGyroMatrix(float[] rotMatrix) {
@@ -101,44 +93,4 @@ public class GLOverlayRenderer implements Renderer {
     	assert(position.length == 3);
     	mDevicePosition = position.clone();
     }
-    	
-	// The prettiest cube in ALL of the lands!
-	private static float[] cubeVertices = {
-		-1.0f,-1.0f,-1.0f, // triangle 1 : begin
-	    -1.0f,-1.0f, 1.0f,
-	    -1.0f, 1.0f, 1.0f, // triangle 1 : end
-	    1.0f, 1.0f,-1.0f, // triangle 2 : begin
-	    -1.0f,-1.0f,-1.0f,
-	    -1.0f, 1.0f,-1.0f, // triangle 2 : end
-	    1.0f,-1.0f, 1.0f,
-	    -1.0f,-1.0f,-1.0f,
-	    1.0f,-1.0f,-1.0f,
-	    1.0f, 1.0f,-1.0f,
-	    1.0f,-1.0f,-1.0f,
-	    -1.0f,-1.0f,-1.0f,
-	    -1.0f,-1.0f,-1.0f,
-	    -1.0f, 1.0f, 1.0f,
-	    -1.0f, 1.0f,-1.0f,
-	    1.0f,-1.0f, 1.0f,
-	    -1.0f,-1.0f, 1.0f,
-	    -1.0f,-1.0f,-1.0f,
-	    -1.0f, 1.0f, 1.0f,
-	    -1.0f,-1.0f, 1.0f,
-	    1.0f,-1.0f, 1.0f,
-	    1.0f, 1.0f, 1.0f,
-	    1.0f,-1.0f,-1.0f,
-	    1.0f, 1.0f,-1.0f,
-	    1.0f,-1.0f,-1.0f,
-	    1.0f, 1.0f, 1.0f,
-	    1.0f,-1.0f, 1.0f,
-	    1.0f, 1.0f, 1.0f,
-	    1.0f, 1.0f,-1.0f,
-	    -1.0f, 1.0f,-1.0f,
-	    1.0f, 1.0f, 1.0f,
-	    -1.0f, 1.0f,-1.0f,
-	    -1.0f, 1.0f, 1.0f,
-	    1.0f, 1.0f, 1.0f,
-	    -1.0f, 1.0f, 1.0f,
-	    1.0f,-1.0f, 1.0f	
-};
 }
