@@ -1,9 +1,13 @@
 package pimms.oblig2.gfx;
 
+import javax.microedition.khronos.opengles.GL10;
+
+import android.content.Context;
+
 public class Box extends Object3D {
 	
-	public Box(float[] position) {
-		super(position);
+	public Box(float[] position, Context context) {
+		super(position, context);
 	}
 
 	@Override
@@ -12,7 +16,7 @@ public class Box extends Object3D {
 	}
 	
 	@Override
-	float[] getColors() {
+	float[] getTexCoord(GL10 gl) {
 		return null;
 	}
 	

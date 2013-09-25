@@ -4,16 +4,20 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.content.Context;
+
 
 public class Scene3D {
 	private static final float[] sLightAmbient = new float[] {0.7f, 0.7f, 0.7f, 1f };
 	private static final float[] sLightDiffuse = new float[] {0.55f, 0.5f, 0.5f, 1f};
 	private static final float[] sLightSpecular = new float[] {1f, 1f, 1f, 1f};
-	private static final float[] sLightPosition = new float[] {-5f, 10f, -5f, 1f};
+	private static final float[] sLightPosition = new float[] {0f, 10f, 0f, 1f};
 	
-	ArrayList<Object3D>	mObjects;
+	private ArrayList<Object3D> mObjects;
+	private Context mContext;
 	
-	public Scene3D(GL10 gl) {
+	public Scene3D(GL10 gl, Context context) {
+		mContext = context;
 		mObjects = new ArrayList<Object3D>();
 			
 		int cubes = 32;
@@ -21,10 +25,18 @@ public class Scene3D {
 		while (rad >= 0.0) {
 			float x = (float)Math.cos(rad) * 20f;
 			float z = (float)Math.sin(rad) * 20f;
-			mObjects.add(new Box(new float[] {x, 0f, z}));
+			
+			Object3D obj = new Box(new float[] {x, 1f, z}, mContext);
+			obj.init(gl);
+			mObjects.add(obj);
+			
 			
 			rad -= (Math.PI*2) / cubes;
 		}
+		
+		Object3D obj = new Heightmap(new float[]{0f,0f,0f}, mContext);
+		obj.init(gl);
+		mObjects.add(obj);
 		
 		initLights(gl);
 	}

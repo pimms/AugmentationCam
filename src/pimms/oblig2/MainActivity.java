@@ -27,6 +27,7 @@ import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.ActionBar.LayoutParams;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.hardware.Sensor;
@@ -123,7 +124,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnCli
         mGlView = (GLSurfaceView)findViewById(R.id.glView);
         mGlView.setEGLConfigChooser( 8, 8, 8, 8, 16, 0 );
         mGlView.getHolder().setFormat( PixelFormat.TRANSLUCENT );
-        mRenderer = new GLOverlayRenderer();
+        mRenderer = new GLOverlayRenderer(this);
         mGlView.setRenderer(mRenderer);
         
         mDevicePosition = new float[] { -10f, 0f, 0f };

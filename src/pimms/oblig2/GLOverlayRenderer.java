@@ -3,11 +3,10 @@ package pimms.oblig2;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import pimms.oblig2.gfx.Scene3D;
+import android.content.Context;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
-import android.util.Log;
-
-import pimms.oblig2.gfx.*;
 
 public class GLOverlayRenderer implements Renderer {
 	public static final double METERS_PER_LON = 55799.979000000014;
@@ -17,10 +16,11 @@ public class GLOverlayRenderer implements Renderer {
 	private float[] mRotMatrix = new float[16];
 	private float[] mDevicePosition = new float[3];
 
+	private Context mContext;
 	private Scene3D mScene;
 	
-	public GLOverlayRenderer() {
-		
+	public GLOverlayRenderer(Context context) {
+		mContext = context;
 	}
 	
 	public void onDrawFrame(GL10 gl) {
@@ -59,14 +59,17 @@ public class GLOverlayRenderer implements Renderer {
     	gl.glDepthFunc(GL10.GL_LEQUAL);
     	gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
     	gl.glShadeModel(GL10.GL_SMOOTH);
-    	gl.glDisable(GL10.GL_DITHER);
+    	gl.glDisable(GL10.GL_TEXTURE_2D);
     	
     	// Vertex Arrays are required for all objects,
     	// so it's always enabled. Other client states
     	// must be handled by Object3D objects manually.
     	gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
     	
-    	mScene = new Scene3D(gl);
+    	// Textures are generally disabled.
+    	gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+    	
+    	mScene = new Scene3D(gl, mContext);
     }  
 
     public void setGyroMatrix(float[] rotMatrix) {
