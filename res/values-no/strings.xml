@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- Main Activity -->
+    <string name="main_rot_prompt">Roter enheten din 90 grader mot venstre, takk!</string>
+    <string name="main_desc">Bruk knappene på skjermen til å bevege deg rundt. Se omkring deg ved å rotere enhten din.</string>
+    <string name="main_btn_go">La oss gå, kamerater!</string>
+    
+    
+    
+</resources>
