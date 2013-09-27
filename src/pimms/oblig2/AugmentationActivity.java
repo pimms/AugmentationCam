@@ -127,7 +127,7 @@ public class AugmentationActivity extends Activity implements SensorEventListene
         mRenderer = new GLOverlayRenderer(this);
         mGlView.setRenderer(mRenderer);
         
-        mDevicePosition = new float[] { -10f, 0f, 0f };
+        mDevicePosition = new float[] { -10f, 1.5f, 0f };
         mRenderer.setDeviceLocation(mDevicePosition);
      
         initButtonListeners();
