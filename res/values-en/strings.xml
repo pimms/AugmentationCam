@@ -3,7 +3,10 @@
     
     <!-- Main Activity -->
     <string name="main_rot_prompt">Please rotate your device 90 degrees to the left.</string>
+    <string name="main_img_desc">Rotate your device like this.</string>
+    
     <string name="main_desc">Use the on-screen buttons to navigate the environment. Look around you by rotating device.</string>
     <string name="main_btn_go">Go!</string>
+    
     
 </resources>

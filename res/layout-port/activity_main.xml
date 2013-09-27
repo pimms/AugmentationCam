@@ -15,4 +15,17 @@
         android:text="@string/main_rot_prompt"
         android:textSize="20sp" />
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/main_img_desc"
+        android:maxHeight="256dp"
+        android:maxWidth="256dp"
+        android:minHeight="128dp"
+        android:minWidth="128dp"
+        android:src="@drawable/stylizedphone" />
+
 </RelativeLayout>
