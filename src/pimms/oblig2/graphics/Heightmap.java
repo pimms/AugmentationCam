@@ -7,9 +7,9 @@ import android.content.Context;
 
 public class Heightmap extends Object3D {
 
-	private static final int xQuads = 32;
-	private static final int zQuads = 32;
-	private static final int quadSize = 4;
+	private static final int xQuads = 64;
+	private static final int zQuads = 64;
+	private static final int quadSize = 16;
 	
 	public Heightmap(float[] position, Context context) {
 		super(position, context);
