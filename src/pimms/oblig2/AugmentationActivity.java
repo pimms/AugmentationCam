@@ -25,6 +25,8 @@ package pimms.oblig2;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import pimms.oblig2.graphics.GLSceneRenderer;
+
 import android.app.Activity;
 import android.app.ActionBar.LayoutParams;
 import android.content.Context;
@@ -83,7 +85,7 @@ public class AugmentationActivity extends Activity implements SensorEventListene
 	
 	public Handler mHandler;
 	private GLSurfaceView mGlView;
-	private GLOverlayRenderer mRenderer;
+	private GLSceneRenderer mRenderer;
 	
 	private float[] mDevicePosition;
 	
@@ -124,7 +126,7 @@ public class AugmentationActivity extends Activity implements SensorEventListene
         mGlView = (GLSurfaceView)findViewById(R.id.glView);
         mGlView.setEGLConfigChooser( 8, 8, 8, 8, 16, 0 );
         mGlView.getHolder().setFormat( PixelFormat.TRANSLUCENT );
-        mRenderer = new GLOverlayRenderer(this);
+        mRenderer = new GLSceneRenderer(this);
         mGlView.setRenderer(mRenderer);
         
         mDevicePosition = new float[] { -10f, 1.5f, 0f };

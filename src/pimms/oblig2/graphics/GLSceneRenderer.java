@@ -1,14 +1,13 @@
-package pimms.oblig2;
+package pimms.oblig2.graphics;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import pimms.oblig2.gfx.Scene3D;
 import android.content.Context;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 
-public class GLOverlayRenderer implements Renderer {
+public class GLSceneRenderer implements Renderer {
 	public static final double METERS_PER_LON = 55799.979000000014;
 	public static final double METERS_PER_LAT = 111412.24020000001;
 	
@@ -19,7 +18,7 @@ public class GLOverlayRenderer implements Renderer {
 	private Context mContext;
 	private Scene3D mScene;
 	
-	public GLOverlayRenderer(Context context) {
+	public GLSceneRenderer(Context context) {
 		mContext = context;
 	}
 	
