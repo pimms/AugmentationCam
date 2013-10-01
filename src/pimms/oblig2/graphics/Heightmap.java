@@ -1,4 +1,4 @@
-package pimms.oblig2.gfx;
+package pimms.oblig2.graphics;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -7,9 +7,9 @@ import android.content.Context;
 
 public class Heightmap extends Object3D {
 
-	private static final int xQuads = 32;
-	private static final int zQuads = 32;
-	private static final int quadSize = 4;
+	private static final int xQuads = 64;
+	private static final int zQuads = 64;
+	private static final int quadSize = 16;
 	
 	public Heightmap(float[] position, Context context) {
 		super(position, context);
@@ -21,7 +21,7 @@ public class Heightmap extends Object3D {
 		float[][] height = new float[xQuads+1][zQuads+1];
 		for (int i=0; i<xQuads+1; i++) {
 			for (int j=0; j<zQuads+1; j++) {
-				height[i][j] = (float)Math.random()-0.5f;
+				height[i][j] = (float)(Math.random() * 2f) - 1f;
 			}
 		}
 		
@@ -67,7 +67,7 @@ public class Heightmap extends Object3D {
 	
 	@Override
 	float[] getTexCoord(GL10 gl) {
-		loadTexture(gl, R.drawable.repgrass);
+		loadTexture(gl, R.drawable.elwynngrassbase);
 		
 		float[] texCoord = new float[xQuads * zQuads * 12];
 		

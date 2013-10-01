@@ -1,4 +1,4 @@
-package pimms.oblig2.gfx;
+package pimms.oblig2.graphics;
 
 import java.util.ArrayList;
 
