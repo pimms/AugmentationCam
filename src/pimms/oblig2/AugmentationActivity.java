@@ -164,22 +164,16 @@ public class AugmentationActivity extends Activity
     }
     
     private void initButtonListeners() {
-    	Button left = (Button)findViewById(R.id.button_left);
-    	left.setOnClickListener(this);
+    	((Button)findViewById(R.id.button_left)).setOnClickListener(this);
     	
-    	Button right = (Button)findViewById(R.id.button_right);
-    	right.setOnClickListener(this);
+    	((Button)findViewById(R.id.button_right)).setOnClickListener(this);
     	
-    	Button backward = (Button)findViewById(R.id.button_backward);
-    	backward.setOnClickListener(this);
+    	((Button)findViewById(R.id.button_backward)).setOnClickListener(this);
     	
-    	Button forward = (Button)findViewById(R.id.button_forward);
-    	forward.setOnClickListener(this);
+    	((Button)findViewById(R.id.button_forward)).setOnClickListener(this);
     	
-    	Button up = (Button)findViewById(R.id.button_up);
-    	up.setOnClickListener(this);
+    	((Button)findViewById(R.id.button_up)).setOnClickListener(this);
     	
-    	Button down = (Button)findViewById(R.id.button_down);
-    	down.setOnClickListener(this);
+    	((Button)findViewById(R.id.button_down)).setOnClickListener(this);
     }
 }
