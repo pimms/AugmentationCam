@@ -17,53 +17,27 @@
         android:paddingTop="0dp" />
 
     <Button
-        android:id="@+id/button_backward"
+        android:id="@+id/button_down"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/glView"
-        android:layout_alignLeft="@+id/button_forward"
-        android:layout_alignRight="@+id/button_forward"
-        android:text="v" />
-
-    <Button
-        android:id="@+id/button_forward"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button_backward"
-        android:layout_centerHorizontal="true"
-        android:text="^" />
-
-    <Button
-        android:id="@+id/button_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button_backward"
-        android:layout_alignBottom="@+id/button_backward"
-        android:layout_toLeftOf="@+id/button_backward"
-        android:text="left" />
-
-    <Button
-        android:id="@+id/button_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button_forward"
-        android:layout_toRightOf="@+id/button_backward"
-        android:text="right" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="Down" />
 
     <Button
         android:id="@+id/button_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/glView"
-        android:layout_alignRight="@+id/glView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:text="Up" />
 
-    <Button
-        android:id="@+id/button_down"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/glView"
-        android:layout_alignLeft="@+id/glView"
-        android:text="Down" />
+    <pimms.oblig2.JoystickView
+        android:id="@+id/joystick"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="22dp" />
 
 </RelativeLayout>

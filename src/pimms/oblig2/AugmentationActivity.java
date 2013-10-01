@@ -158,10 +158,12 @@ public class AugmentationActivity extends Activity implements SensorEventListene
     @Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.button_backward:
-			translateDevicePos(0f, 1f);
+		case R.id.joystick:
+			
+			translateDevicePos( 0f, 1f);
 			break;
 			
+		/*
 		case R.id.button_forward:
 			translateDevicePos(0f, -1f);
 			break;
@@ -173,6 +175,7 @@ public class AugmentationActivity extends Activity implements SensorEventListene
 		case R.id.button_right:
 			translateDevicePos(1f, 0f);
 			break;
+		*/
 			
 		case R.id.button_down:
 			mDevicePosition[1] -= 1.f;
@@ -212,6 +215,7 @@ public class AugmentationActivity extends Activity implements SensorEventListene
     }
     
     private void initButtonListeners() {
+    	/*
     	Button left = (Button)findViewById(R.id.button_left);
     	left.setOnClickListener(this);
     	
@@ -223,12 +227,16 @@ public class AugmentationActivity extends Activity implements SensorEventListene
     	
     	Button forward = (Button)findViewById(R.id.button_forward);
     	forward.setOnClickListener(this);
+    	*/
     	
     	Button up = (Button)findViewById(R.id.button_up);
     	up.setOnClickListener(this);
     	
     	Button down = (Button)findViewById(R.id.button_down);
     	down.setOnClickListener(this);
+    	
+    	View joystick = (View)findViewById(R.id.joystick);
+    	joystick.setOnClickListener(this);
     }
 
 	@Override
