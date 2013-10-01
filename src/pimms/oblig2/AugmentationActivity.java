@@ -112,27 +112,27 @@ public class AugmentationActivity extends Activity
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.button_backward:
-			translateDevicePos(0f, 1f);
+			translateDevicePos(0f, 0f, 1f);
 			break;
 			
 		case R.id.button_forward:
-			translateDevicePos(0f, -1f);
+			translateDevicePos(0f, 0f, -1f);
 			break;
 			
 		case R.id.button_left:
-			translateDevicePos(-1f, 0f);
+			translateDevicePos(-1f, 0f, 0f);
 			break;
 			
 		case R.id.button_right:
-			translateDevicePos(1f, 0f);
+			translateDevicePos(1f, 0f, 0f);
 			break;
 			
 		case R.id.button_down:
-			mDevicePosition[1] -= 1.f;
+			translateDevicePos(0f, -1f, 0f);
 			break;
 			
 		case R.id.button_up:
-			mDevicePosition[1] += 1.f;
+			translateDevicePos(0f, 1f, 0f);
 			break;
 		}
 		
@@ -149,8 +149,8 @@ public class AugmentationActivity extends Activity
     }
     
     
-    
-    private void translateDevicePos(float x, float z) {
+    private void translateDevicePos(float x, float y, float z) {
+    	// Update the position in the XZ plane based on the Y-rotation
     	float yRot = mFusedOrientation[0];
     	
     	float dx = (float)(x*Math.cos(yRot) - z*Math.sin(yRot));
@@ -158,6 +158,9 @@ public class AugmentationActivity extends Activity
     	
     	mDevicePosition[0] += dx;
     	mDevicePosition[2] += dz;
+    	
+    	// Update the position in the Y axis directly
+    	mDevicePosition[1] += y;
     }
     
     private void initButtonListeners() {
