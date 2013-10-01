@@ -145,7 +145,8 @@ public class AugmentationActivity extends Activity
     	mRenderer.setRotationEuler(
 	    	(float)Math.toDegrees(fusedOrientation[0]),
 	    	(float)Math.toDegrees(fusedOrientation[1]),
-	    	(float)Math.toDegrees(fusedOrientation[2]));
+	    	(float)Math.toDegrees(fusedOrientation[2])
+	    );
     }
     
     
