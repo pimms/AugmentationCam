@@ -139,15 +139,15 @@ public class OrientationSensorReader implements SensorEventListener {
 		
 		// Calculate the angular speed of the sample
 		float omegaMagnitude =
-		(float)Math.sqrt(gyroValues[0] * gyroValues[0] +
-		gyroValues[1] * gyroValues[1] +
-		gyroValues[2] * gyroValues[2]);
+				(float)Math.sqrt(gyroValues[0] * gyroValues[0] +
+						gyroValues[1] * gyroValues[1] +
+						gyroValues[2] * gyroValues[2]);
 		
 		// Normalize the rotation vector if it's big enough to get the axis
 		if(omegaMagnitude > EPSILON) {
-		normValues[0] = gyroValues[0] / omegaMagnitude;
-		normValues[1] = gyroValues[1] / omegaMagnitude;
-		normValues[2] = gyroValues[2] / omegaMagnitude;
+			normValues[0] = gyroValues[0] / omegaMagnitude;
+			normValues[1] = gyroValues[1] / omegaMagnitude;
+			normValues[2] = gyroValues[2] / omegaMagnitude;
 		}
 		
 		// Integrate around this axis with the angular speed by the timestep
@@ -167,8 +167,9 @@ public class OrientationSensorReader implements SensorEventListener {
     // It writes the gyroscope based orientation into gyroOrientation.
     public void gyroFunction(SensorEvent event) {
         // don't start until first accelerometer/magnetometer orientation has been acquired
-        if (accMagOrientation == null)
+        if (accMagOrientation == null) {
             return;
+        }
      
         // initialisation of the gyroscope based rotation matrix
         if(initState) {
@@ -185,8 +186,8 @@ public class OrientationSensorReader implements SensorEventListener {
         float[] deltaVector = new float[4];
         if(timestamp != 0) {
             final float dT = (event.timestamp - timestamp) * NS2S;
-        System.arraycopy(event.values, 0, gyro, 0, 3);
-        getRotationVectorFromGyro(gyro, deltaVector, dT / 2.0f);
+            System.arraycopy(event.values, 0, gyro, 0, 3);
+            getRotationVectorFromGyro(gyro, deltaVector, dT / 2.0f);
         }
      
         // measurement done, save current time for next interval
@@ -315,53 +316,3 @@ public class OrientationSensorReader implements SensorEventListener {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
