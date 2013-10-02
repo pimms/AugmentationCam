@@ -92,25 +92,7 @@ public class AugmentationActivity extends Activity
 		case R.id.joystick:
 			translateDevicePos(0f, 0f, 1f);
 			break;
-		
-		/*case R.id.button_backward:
-			translateDevicePos(0f, 0f, 1f);
-			break;
-			
-		
-		case R.id.button_forward:
-			translateDevicePos(0f, 0f, -1f);
-			break;
-			
-		case R.id.button_left:
-			translateDevicePos(-1f, 0f, 0f);
-			break;
-			
-		case R.id.button_right:
-			translateDevicePos(1f, 0f, 0f);
-			break;
-		*/
-			
+
 		case R.id.button_down:
 			translateDevicePos(0f, -1f, 0f);
 			break;
