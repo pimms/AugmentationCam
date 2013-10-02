@@ -49,8 +49,8 @@ public class AugmentationActivity extends Activity
         
         // Create an openGL view and set it as the main layout
         mGlView = (GLSurfaceView)findViewById(R.id.glView);
-        mGlView.setEGLConfigChooser( 8, 8, 8, 8, 16, 0 );
-        mGlView.getHolder().setFormat( PixelFormat.TRANSLUCENT );
+        mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
         mRenderer = new GLSceneRenderer(this);
         mGlView.setRenderer(mRenderer);
         
