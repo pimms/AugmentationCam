@@ -17,6 +17,7 @@ import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -26,7 +27,8 @@ import android.widget.Button;
 
 public class AugmentationActivity extends Activity 
 			implements 	OnClickListener,
-						OrientationSensorListener{
+						OrientationSensorListener,
+						JoystickMovedListener {
 	
 	private GLSurfaceView mGlView;
 	private GLSceneRenderer mRenderer;
@@ -85,14 +87,9 @@ public class AugmentationActivity extends Activity
     	mSensors.beginReading();
     }
     
-    
     @Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.joystick:
-			translateDevicePos(0f, 0f, 1f);
-			break;
-
 		case R.id.button_down:
 			translateDevicePos(0f, -1f, 0f);
 			break;
@@ -105,6 +102,26 @@ public class AugmentationActivity extends Activity
 		mRenderer.setDeviceLocation(mDevicePosition);
 	}
     
+    @Override
+	public void OnMoved(int pan, int tilt) {
+    	// pan and tilt refer to X and Y respectively, and their values
+    	// exists in the domain {-10, 10}.
+		float diffX = (float)(pan) / 30f;
+		float diffZ = (float)(tilt) / 30f;
+		
+		// Normalize the values
+		//float magnitude = (float)Math.sqrt(diffX*diffX + diffZ*diffZ);
+		//diffX /= magnitude;
+		//diffZ /= magnitude;
+		
+		translateDevicePos(diffX, 0f, diffZ);
+	}
+
+	@Override
+	public void OnReleased() {
+		
+	}
+    
     public void onOrientationDataReady(float[] fusedOrientation) {
     	mFusedOrientation = fusedOrientation;
     	
@@ -113,6 +130,8 @@ public class AugmentationActivity extends Activity
 	    	(float)Math.toDegrees(fusedOrientation[1]),
 	    	(float)Math.toDegrees(fusedOrientation[2])
 	    );
+    	
+    	mRenderer.setDeviceLocation(mDevicePosition);
     }
     
     
@@ -134,7 +153,7 @@ public class AugmentationActivity extends Activity
     	((Button)findViewById(R.id.button_up)).setOnClickListener(this);
     	((Button)findViewById(R.id.button_down)).setOnClickListener(this);
     	
-    	View joystick = (View)findViewById(R.id.joystick);
-    	joystick.setOnClickListener(this);
+    	JoystickView joystick = (JoystickView)findViewById(R.id.joystick);
+    	joystick.setOnJoystickMovedListener(this);
     }
 }
