@@ -90,7 +90,7 @@ public class AugmentationActivity extends Activity
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.joystick:
-			translateDevicePos( 0f, 1f);
+			translateDevicePos(0f, 0f, 1f);
 			break;
 		
 		/*case R.id.button_backward:
@@ -149,27 +149,10 @@ public class AugmentationActivity extends Activity
     }
     
     private void initButtonListeners() {
-    	/*
-    	Button left = (Button)findViewById(R.id.button_left);
-    	left.setOnClickListener(this);
-    	((Button)findViewById(R.id.button_left)).setOnClickListener(this);
-    	
-    	((Button)findViewById(R.id.button_right)).setOnClickListener(this);
-    	
-    	((Button)findViewById(R.id.button_backward)).setOnClickListener(this);
-    	
-    	Button forward = (Button)findViewById(R.id.button_forward);
-    	forward.setOnClickListener(this);
-    	*/
-    	((Button)findViewById(R.id.button_forward)).setOnClickListener(this);
-    	
     	((Button)findViewById(R.id.button_up)).setOnClickListener(this);
-    	
-    	Button down = (Button)findViewById(R.id.button_down);
-    	down.setOnClickListener(this);
+    	((Button)findViewById(R.id.button_down)).setOnClickListener(this);
     	
     	View joystick = (View)findViewById(R.id.joystick);
     	joystick.setOnClickListener(this);
-    	((Button)findViewById(R.id.button_down)).setOnClickListener(this);
     }
 }
