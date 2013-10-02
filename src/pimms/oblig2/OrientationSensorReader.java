@@ -103,6 +103,10 @@ public class OrientationSensorReader implements SensorEventListener {
 		initSensorListeners();
 		
 		initSensorListeners();
+		
+		// Need to re initalize the fusetimer each time we start reading
+		// since cancel() functions stop the timer
+        fuseTimer = new Timer();
         
         // wait for one second until gyroscope and magnetometer/accelerometer
         // data is initialised then scedule the complementary filter task
