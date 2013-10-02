@@ -9,9 +9,9 @@ import android.content.Context;
 
 public class Scene3D {
 	private static final float[] sLightAmbient = new float[] {0.7f, 0.7f, 0.7f, 1f };
-	private static final float[] sLightDiffuse = new float[] {0.55f, 0.5f, 0.5f, 1f};
+	private static final float[] sLightDiffuse = new float[] {1f, 1f, 1f, 1f};
 	private static final float[] sLightSpecular = new float[] {1f, 1f, 1f, 1f};
-	private static final float[] sLightPosition = new float[] {0f, 10f, 0f, 1f};
+	private static final float[] sLightPosition = new float[] {0f, 50f, 10f, 1f};
 	
 	private ArrayList<Object3D> mObjects;
 	private Context mContext;
@@ -40,9 +40,8 @@ public class Scene3D {
 		mObjects.add(obj);
 		
 		obj = new Model(mContext, "USSEnterprise.obj");
-		obj.setScale(2f);
-		//obj.setPosition(25f, 10f, 3f);
-		obj.setPosition(0f, 15f, 0f);
+		//obj.setScale(40f);
+		//obj.setPosition(0f, 100f, 250f);
 		obj.init(gl);
 		mObjects.add(obj);
 		
@@ -59,6 +58,7 @@ public class Scene3D {
 	
 	protected void initLights(GL10 gl) {
 		gl.glEnable(GL10.GL_LIGHTING);
+		gl.glShadeModel(GL10.GL_SMOOTH);
 		gl.glEnable(GL10.GL_LIGHT0);
 		
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, sLightAmbient, 0);
