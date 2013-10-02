@@ -38,6 +38,10 @@ public class Scene3D {
 		obj.init(gl);
 		mObjects.add(obj);
 		
+		obj = new Model(new float[]{0f,0f,0f}, mContext, "test.obj");
+		obj.init(gl);
+		mObjects.add(obj);
+		
 		initLights(gl);
 	}
 	
