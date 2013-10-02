@@ -26,7 +26,8 @@ public class Scene3D {
 			float x = (float)Math.cos(rad) * 20f;
 			float z = (float)Math.sin(rad) * 20f;
 			
-			Object3D obj = new Box(new float[] {x, 1f, z}, mContext);
+			Object3D obj = new Box(mContext);
+			obj.setPosition(x, 1f, z);
 			obj.init(gl);
 			mObjects.add(obj);
 			
@@ -34,11 +35,14 @@ public class Scene3D {
 			rad -= (Math.PI*2) / cubes;
 		}
 		
-		Object3D obj = new Heightmap(new float[]{0f,0f,0f}, mContext);
+		Object3D obj = new Heightmap(mContext);
 		obj.init(gl);
 		mObjects.add(obj);
 		
-		obj = new Model(new float[]{0f,0f,0f}, mContext, "test.obj");
+		obj = new Model(mContext, "USSEnterprise.obj");
+		obj.setScale(2f);
+		//obj.setPosition(25f, 10f, 3f);
+		obj.setPosition(0f, 15f, 0f);
 		obj.init(gl);
 		mObjects.add(obj);
 		
@@ -60,5 +64,9 @@ public class Scene3D {
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, sLightAmbient, 0);
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, sLightDiffuse, 0);
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR, sLightSpecular, 0);
+		
+		gl.glLightf(GL10.GL_LIGHT0, GL10.GL_CONSTANT_ATTENUATION, 1f);
+		gl.glLightf(GL10.GL_LIGHT0, GL10.GL_QUADRATIC_ATTENUATION, 0f);
+		gl.glLightf(GL10.GL_LIGHT0, GL10.GL_LINEAR_ATTENUATION, 0f);
 	}
 }

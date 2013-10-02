@@ -27,12 +27,11 @@ public abstract class Object3D {
 	private int mTexture = -1;
 	
 	protected float[] mPosition;
+	protected float mScale = 1f;
 	protected Context mContext;
 	
-	public Object3D(float[] position, Context context) {
-		assert(position.length == 3);
-		
-		mPosition = position;
+	public Object3D(Context context) {
+		setPosition(0f, 0f, 0f);
 		mContext = context;
 	}
 	
@@ -40,6 +39,18 @@ public abstract class Object3D {
 	public void init(GL10 gl) {
 		loadVertexData();
 		loadTexcoordData(gl);
+	}
+	
+	/*
+	 * For simplicity, models can only be scaled uniformly
+	 * in all directions. 
+	 */
+	public void setScale(float scale) {
+		mScale = scale;
+	}
+	
+	public void setPosition(float x, float y, float z) {
+		mPosition = new float[] {x, y, z};
 	}
 	
 	public final void loadVertexData() {
@@ -67,6 +78,7 @@ public abstract class Object3D {
 	public final void draw(GL10 gl) {
 		gl.glPushMatrix();
 		gl.glTranslatef(mPosition[0], mPosition[1], mPosition[2]);
+		gl.glScalef(mScale, mScale, mScale);
 		
 		// Pass the normals if applicable
 		if (mNormalBuffer != null) {

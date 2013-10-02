@@ -11,8 +11,8 @@ public class Heightmap extends Object3D {
 	private static final int zQuads = 64;
 	private static final int quadSize = 16;
 	
-	public Heightmap(float[] position, Context context) {
-		super(position, context);
+	public Heightmap(Context context) {
+		super(context);
 	}
 	
 	@Override
