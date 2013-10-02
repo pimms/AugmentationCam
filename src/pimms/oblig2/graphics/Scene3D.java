@@ -12,6 +12,9 @@ public class Scene3D {
 	private static final float[] sLightDiffuse = new float[] {1f, 1f, 1f, 1f};
 	private static final float[] sLightSpecular = new float[] {1f, 1f, 1f, 1f};
 	private static final float[] sLightPosition = new float[] {0f, 50f, 10f, 1f};
+	private static final float sLightAttConstant = 0.25f;
+	private static final float sLightAttLinear = 0f;
+	private static final float sLightAttQuadratic = 0f;
 	
 	private ArrayList<Object3D> mObjects;
 	private Context mContext;
@@ -40,8 +43,8 @@ public class Scene3D {
 		mObjects.add(obj);
 		
 		obj = new Model(mContext, "USSEnterprise.obj");
-		//obj.setScale(40f);
-		//obj.setPosition(0f, 100f, 250f);
+		obj.setScale(50f);
+		obj.setPosition(0f, 100f, 250f);
 		obj.init(gl);
 		mObjects.add(obj);
 		
@@ -65,8 +68,8 @@ public class Scene3D {
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, sLightDiffuse, 0);
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR, sLightSpecular, 0);
 		
-		gl.glLightf(GL10.GL_LIGHT0, GL10.GL_CONSTANT_ATTENUATION, 1f);
-		gl.glLightf(GL10.GL_LIGHT0, GL10.GL_QUADRATIC_ATTENUATION, 0f);
-		gl.glLightf(GL10.GL_LIGHT0, GL10.GL_LINEAR_ATTENUATION, 0f);
+		gl.glLightf(GL10.GL_LIGHT0, GL10.GL_CONSTANT_ATTENUATION, sLightAttConstant);
+		gl.glLightf(GL10.GL_LIGHT0, GL10.GL_QUADRATIC_ATTENUATION, sLightAttLinear);
+		gl.glLightf(GL10.GL_LIGHT0, GL10.GL_LINEAR_ATTENUATION, sLightAttQuadratic);
 	}
 }

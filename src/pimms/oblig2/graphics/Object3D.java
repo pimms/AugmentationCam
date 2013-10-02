@@ -180,9 +180,8 @@ public abstract class Object3D {
 				}
 			} else {
 				for (int j=0; j<3; j++) {
-					normVert[i] = mVertexBuffer.get();
+					normVert[i] = mVertexBuffer.get() * mScale;
 					normVert[i] += mPosition[j];
-					normVert[i] *= mScale;
 					i++;
 				}
 			}
