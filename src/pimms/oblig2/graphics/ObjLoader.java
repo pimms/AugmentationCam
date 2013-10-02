@@ -36,6 +36,7 @@ public class ObjLoader {
 	// If time allows it, improve this.
 	private ArrayList<float[]> mVertices;
 	private ArrayList<int[]> mFaces;
+	private int mFaceSize;
 	
 	public ObjLoader() {
 		mVertices = new ArrayList<float[]>();
@@ -58,9 +59,11 @@ public class ObjLoader {
 				parseLine();
 			}
 		} catch (FormatException e) {
-			Log.e(TAG, "Invalid format in OBJ-file.");
+			Log.e(TAG, "Invalid format in OBJ-file: " + e.getMessage());
 			return false;
 		}
+		
+		Log.d(TAG, "Loaded OBJ-model with " + mVertices.size() + " vertices");
 		
 		return true;
 	}
@@ -71,9 +74,9 @@ public class ObjLoader {
 		// using drawArrays.
 		
 		// Calculate the total amount of vertices
-		int length = 0;
-		for (int i=0; i<mFaces.size(); i++) {
-			length += mFaces.get(i).length;
+		int length = mFaces.size() * mFaceSize;
+		if (mFaceSize == 4) {
+			length *= 1.5;
 		}
 		
 		float[] verts = new float[length * 3];
@@ -83,10 +86,27 @@ public class ObjLoader {
 		for (int i=0; i<mFaces.size(); i++) {
 			int[] face = mFaces.get(i);
 			
-			for (int j=0; j<face.length; j++) {
-				float[] vert = mVertices.get(face[j]);
-				for (int k=0; k<3; k++) {
-					verts[idx++] = vert[k];
+			if (mFaceSize == 3) {
+				for (int j=0; j<3; j++) {
+					float[] vert = mVertices.get(face[j]-1);
+					for (int k=0; k<3; k++) {
+						verts[idx++] = vert[k];
+					}
+				}
+			} else {
+				// Convert 4-vertex-faced on the form 
+				// {0,1,2,3} to {0,1,2}{0,2,3}
+				for (int j=0; j<2; j++) {
+					for (int k=0; k<4; k++) {
+						// Nasty hack 
+						if (j == 0 && k == 3) continue;
+						if (j == 1 && k == 1) continue;
+						
+						float[] vert = mVertices.get(face[k]-1);
+						for (int l=0; l<3; l++) {
+							verts[idx++] = vert[l];
+						}
+					}
 				}
 			}
 		}
@@ -102,31 +122,22 @@ public class ObjLoader {
 		return null;
 	}
 	
-	
 	private void parseLine() throws FormatException {
 		String next = mFileScanner.next();
 		
-		if (next == "v") {
+		if (next.equals("v")) {
 			parseVertex();
-		} else if (next == "f") {
+		} else if (next.equals("f")) {
 			parseFace();
 		} else {
-			// Discard the line
-			mFileScanner.nextLine();
+			Log.d(TAG, "Discarding: (" + next + ") " + mFileScanner.nextLine());
 		}
 	}
 	
 	private void parseVertex() throws FormatException {
-		String line = mFileScanner.nextLine();
-		String[] elems = line.split(" ");
-		
-		if (elems.length != 3) {
-			throw new FormatException("Expected 3 vertex elements, got " + elems.length);
-		}
-		
 		float[] vert = new float[3];
 		for (int i=0; i<3; i++) {
-			vert[i] = Float.parseFloat(elems[i]);
+			vert[i] = Float.parseFloat(mFileScanner.next());
 		}
 		
 		mVertices.add(vert);
@@ -134,10 +145,19 @@ public class ObjLoader {
 	
 	private void parseFace() throws FormatException {
 		String line = mFileScanner.nextLine();
-		String[] indices = line.split(" ");
+		String[] indices = line.replaceFirst("^ ", "").split(" ");
 		
 		if (indices.length < 3) {
-			throw new FormatException("Very unable to build a face from <3 vertices");
+			throw new FormatException("Very unable to build a face from "+indices.length+" vertices");
+		}
+		
+		if (mFaceSize == 0) {
+			mFaceSize = indices.length;
+			if (mFaceSize != 3 && mFaceSize != 4) {
+				throw new FormatException("Unsupported number of vertices in face: " + mFaceSize);
+			}
+		} else if (mFaceSize != indices.length) {
+			throw new FormatException("Inconsistent number of vertices in faces");
 		}
 		
 		int[] face = new int[indices.length];

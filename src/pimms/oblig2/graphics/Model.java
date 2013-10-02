@@ -1,8 +1,10 @@
 package pimms.oblig2.graphics;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 
 import android.content.Context;
+import android.util.Log;
 
 /*
  * Model is an extension of Object3D which loads it's data
@@ -24,6 +26,8 @@ public class Model extends Object3D {
 	public void init(GL10 gl) {
 		if (mObjLoader.parseFile(mFileName, mContext)) {
 			super.init(gl);	
+		} else {
+			Log.e("Model", "Failed to load model " + mFileName);
 		}
 	}
 

@@ -136,6 +136,10 @@ public class AugmentationActivity extends Activity
     
     
     private void translateDevicePos(float x, float y, float z) {
+    	if (mFusedOrientation == null) {
+    		return;
+    	}
+    	
     	// Update the position in the XZ plane based on the Y-rotation
     	float yRot = mFusedOrientation[0];
     	
