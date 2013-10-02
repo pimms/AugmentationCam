@@ -26,7 +26,7 @@ public abstract class Object3D {
 	private int mTexture = -1;
 	
 	protected float[] mPosition;
-	private Context mContext;
+	protected Context mContext;
 	
 	public Object3D(float[] position, Context context) {
 		assert(position.length == 3);
@@ -36,7 +36,7 @@ public abstract class Object3D {
 	}
 	
 	
-	public final void init(GL10 gl) {
+	public void init(GL10 gl) {
 		loadVertexData();
 		loadTexcoordData(gl);
 	}
@@ -98,7 +98,16 @@ public abstract class Object3D {
 	}
 	
 	
+	/*
+	 * 
+	 */
 	abstract float[] getVertices();
+	
+	/*
+	 * Overriders of getTexCoord(GL10) are REQUIRED
+	 * to load it's required texture within the method if the
+	 * texture coordinates are to be used.
+	 */
 	abstract float[] getTexCoord(GL10 gl);
 
 	protected void loadTexture(GL10 gl, int id) {
