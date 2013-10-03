@@ -36,10 +36,12 @@ public class ObjLoader {
 	// If time allows it, improve this.
 	private ArrayList<float[]> mVertices;
 	private ArrayList<int[]> mFaces;
+	private ArrayList<float[]> mTexCoord;
 	
 	public ObjLoader() {
 		mVertices = new ArrayList<float[]>();
 		mFaces = new ArrayList<int[]>();
+		mTexCoord = new ArrayList<float[]>();
 	}
 	
 	public boolean parseFile(String fileName, Context context) {
@@ -133,6 +135,8 @@ public class ObjLoader {
 			parseVertex();
 		} else if (next.equals("f")) {
 			parseFace();
+		} else if (next.equals("vt")) {
+			parseTexCoord();
 		} else {
 			Log.d(TAG, "Discarding: (" + next + ") " + mFileScanner.nextLine());
 		}
@@ -162,6 +166,16 @@ public class ObjLoader {
 		}
 		
 		mFaces.add(face);
+	}
+
+	private void parseTexCoord() {
+		float[] texCoord = new float[2];
+		
+		for (int i=0; i<2; i++) {
+			texCoord[i] = Float.parseFloat(mFileScanner.next());
+		}
+		
+		mTexCoord.add(texCoord);
 	}
 }
 
