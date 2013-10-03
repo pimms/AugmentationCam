@@ -6,8 +6,8 @@ import android.content.Context;
 
 public class Box extends Object3D {
 	
-	public Box(float[] position, Context context) {
-		super(position, context);
+	public Box(Context context) {
+		super(context);
 	}
 
 	@Override

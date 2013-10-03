@@ -36,11 +36,12 @@ public class ObjLoader {
 	// If time allows it, improve this.
 	private ArrayList<float[]> mVertices;
 	private ArrayList<int[]> mFaces;
-	private int mFaceSize;
+	private ArrayList<float[]> mTexCoord;
 	
 	public ObjLoader() {
 		mVertices = new ArrayList<float[]>();
 		mFaces = new ArrayList<int[]>();
+		mTexCoord = new ArrayList<float[]>();
 	}
 	
 	public boolean parseFile(String fileName, Context context) {
@@ -74,9 +75,14 @@ public class ObjLoader {
 		// using drawArrays.
 		
 		// Calculate the total amount of vertices
-		int length = mFaces.size() * mFaceSize;
-		if (mFaceSize == 4) {
-			length *= 1.5;
+		int length = 0;
+		for (int i=0; i<mFaces.size(); i++) {
+			int faceLength = mFaces.get(i).length;
+			if (faceLength == 4) {
+				faceLength *= 1.5f;
+			}
+			
+			length += faceLength;
 		}
 		
 		float[] verts = new float[length * 3];
@@ -86,14 +92,14 @@ public class ObjLoader {
 		for (int i=0; i<mFaces.size(); i++) {
 			int[] face = mFaces.get(i);
 			
-			if (mFaceSize == 3) {
+			if (face.length == 3) {
 				for (int j=0; j<3; j++) {
 					float[] vert = mVertices.get(face[j]-1);
 					for (int k=0; k<3; k++) {
 						verts[idx++] = vert[k];
 					}
 				}
-			} else {
+			} else if (face.length == 4) {
 				// Convert 4-vertex-faced on the form 
 				// {0,1,2,3} to {0,1,2}{0,2,3}
 				for (int j=0; j<2; j++) {
@@ -129,6 +135,8 @@ public class ObjLoader {
 			parseVertex();
 		} else if (next.equals("f")) {
 			parseFace();
+		} else if (next.equals("vt")) {
+			parseTexCoord();
 		} else {
 			Log.d(TAG, "Discarding: (" + next + ") " + mFileScanner.nextLine());
 		}
@@ -147,17 +155,9 @@ public class ObjLoader {
 		String line = mFileScanner.nextLine();
 		String[] indices = line.replaceFirst("^ ", "").split(" ");
 		
-		if (indices.length < 3) {
-			throw new FormatException("Very unable to build a face from "+indices.length+" vertices");
-		}
-		
-		if (mFaceSize == 0) {
-			mFaceSize = indices.length;
-			if (mFaceSize != 3 && mFaceSize != 4) {
-				throw new FormatException("Unsupported number of vertices in face: " + mFaceSize);
-			}
-		} else if (mFaceSize != indices.length) {
-			throw new FormatException("Inconsistent number of vertices in faces");
+		if (indices.length != 3 && indices.length != 4) {
+			//throw new FormatException("Very unable to build a face from "+indices.length+" vertices");
+			return;
 		}
 		
 		int[] face = new int[indices.length];
@@ -166,6 +166,16 @@ public class ObjLoader {
 		}
 		
 		mFaces.add(face);
+	}
+
+	private void parseTexCoord() {
+		float[] texCoord = new float[2];
+		
+		for (int i=0; i<2; i++) {
+			texCoord[i] = Float.parseFloat(mFileScanner.next());
+		}
+		
+		mTexCoord.add(texCoord);
 	}
 }
 

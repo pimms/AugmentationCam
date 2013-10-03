@@ -45,7 +45,7 @@ public class GLSceneRenderer implements Renderer {
         
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
-        GLU.gluPerspective(gl, 45, aspect, 0.1f, 1000f);
+        GLU.gluPerspective(gl, 45, aspect, 0.1f, 10000f);
         
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();

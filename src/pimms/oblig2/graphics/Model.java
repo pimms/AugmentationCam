@@ -15,8 +15,8 @@ public class Model extends Object3D {
 	private ObjLoader mObjLoader;
 	
 	
-	public Model(float[] position, Context context, String file) {
-		super(position, context);
+	public Model(Context context, String file) {
+		super(context);
 		
 		mFileName = file;
 		mObjLoader = new ObjLoader();
