@@ -31,6 +31,11 @@ public class Scene3D {
 		obj.init(gl);
 		mObjects.add(obj);
 		
+		obj = new Object3D(mContext, "Terrain.modobj");
+		obj.setTextureId(R.drawable.tertex);
+		obj.init(gl);
+		mObjects.add(obj);
+		
 		initLights(gl);
 	}
 	
