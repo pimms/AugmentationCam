@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import pimms.oblig2.R;
 import android.content.Context;
 
 
@@ -22,29 +23,11 @@ public class Scene3D {
 	public Scene3D(GL10 gl, Context context) {
 		mContext = context;
 		mObjects = new ArrayList<Object3D>();
-			
-		int cubes = 32;
-		double rad = Math.PI * 2;
-		while (rad >= 0.0) {
-			float x = (float)Math.cos(rad) * 20f;
-			float z = (float)Math.sin(rad) * 20f;
-			
-			Object3D obj = new Box(mContext);
-			obj.setPosition(x, 1f, z);
-			obj.init(gl);
-			mObjects.add(obj);
-			
-			
-			rad -= (Math.PI*2) / cubes;
-		}
 		
-		Object3D obj = new Heightmap(mContext);
-		obj.init(gl);
-		mObjects.add(obj);
-		
-		obj = new Model(mContext, "USSEnterprise.obj");
+		Object3D obj = new Object3D(mContext, "USSEnterprise.modobj");
 		obj.setScale(50f);
 		obj.setPosition(0f, 100f, 250f);
+		obj.setTextureId(R.drawable.enterprise_tex);
 		obj.init(gl);
 		mObjects.add(obj);
 		

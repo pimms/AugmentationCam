@@ -35,13 +35,15 @@ public class ObjLoader {
 	// Conversion to a single array is inefficient.
 	// If time allows it, improve this.
 	private ArrayList<float[]> mVertices;
-	private ArrayList<int[]> mFaces;
+	private ArrayList<short[]> mFaces;
 	private ArrayList<float[]> mTexCoord;
+	private ArrayList<float[]> mNormals;
 	
 	public ObjLoader() {
 		mVertices = new ArrayList<float[]>();
-		mFaces = new ArrayList<int[]>();
+		mFaces = new ArrayList<short[]>();
 		mTexCoord = new ArrayList<float[]>();
+		mNormals = new ArrayList<float[]>();
 	}
 	
 	public boolean parseFile(String fileName, Context context) {
@@ -69,64 +71,56 @@ public class ObjLoader {
 		return true;
 	}
 	
+	
 	public float[] getVertices() {
-		// drawElements is not currently supported. Generate an 
-		// array containing redundant elements ready to be drawn
-		// using drawArrays.
-		
-		// Calculate the total amount of vertices
-		int length = 0;
-		for (int i=0; i<mFaces.size(); i++) {
-			int faceLength = mFaces.get(i).length;
-			if (faceLength == 4) {
-				faceLength *= 1.5f;
-			}
-			
-			length += faceLength;
-		}
-		
-		float[] verts = new float[length * 3];
-		
-		// Build our newly created (and ridonculously awesome) array
-		int idx = 0;
-		for (int i=0; i<mFaces.size(); i++) {
-			int[] face = mFaces.get(i);
-			
-			if (face.length == 3) {
-				for (int j=0; j<3; j++) {
-					float[] vert = mVertices.get(face[j]-1);
-					for (int k=0; k<3; k++) {
-						verts[idx++] = vert[k];
-					}
-				}
-			} else if (face.length == 4) {
-				// Convert 4-vertex-faced on the form 
-				// {0,1,2,3} to {0,1,2}{0,2,3}
-				for (int j=0; j<2; j++) {
-					for (int k=0; k<4; k++) {
-						// Nasty hack 
-						if (j == 0 && k == 3) continue;
-						if (j == 1 && k == 1) continue;
-						
-						float[] vert = mVertices.get(face[k]-1);
-						for (int l=0; l<3; l++) {
-							verts[idx++] = vert[l];
-						}
-					}
-				}
-			}
-		}
+		float[] verts = new float[mVertices.size() * 3];
+		fillArrayFromList(verts, mVertices, 3);
 		
 		return verts;
 	}
 	
-	public int[] getIndices() {
-		return null;
+	public float[] getNormals() {
+		float[] normals = new float[mNormals.size() * 3];
+		fillArrayFromList(normals, mNormals, 3);
+		
+		return normals;
+	}
+	
+	public short[] getIndices() {
+		short[] indices = new short[mFaces.size() * 3];
+		fillArrayFromList(indices, mFaces, 3);
+		
+		return indices;
 	}
 	
 	public float[] getTexCoords() {
-		return null;
+		float[] texCoord = new float[mTexCoord.size() * 2];
+		fillArrayFromList(texCoord, mTexCoord, 2);
+		
+		return texCoord;
 	}
+	
+	
+	private void fillArrayFromList(float[] arr, ArrayList<float[]> list, int elemSize) {
+		int idx = 0;
+		
+		for (int i=0; i<list.size(); i++) {
+			for (int j=0; j<elemSize; j++) {
+				arr[idx++] = list.get(i)[j];
+			}
+		}
+	}
+	
+	private void fillArrayFromList(short[] arr, ArrayList<short[]> list, int elemSize) {
+		int idx = 0;
+		
+		for (int i=0; i<list.size(); i++) {
+			for (int j=0; j<elemSize; j++) {
+				arr[idx++] = list.get(i)[j];
+			}
+		}
+	}
+	
 	
 	private void parseLine() throws FormatException {
 		String next = mFileScanner.next();
@@ -137,6 +131,8 @@ public class ObjLoader {
 			parseFace();
 		} else if (next.equals("vt")) {
 			parseTexCoord();
+		} else if (next.equals("vn")) {
+			parseNormal();
 		} else {
 			Log.d(TAG, "Discarding: (" + next + ") " + mFileScanner.nextLine());
 		}
@@ -160,12 +156,27 @@ public class ObjLoader {
 			return;
 		}
 		
-		int[] face = new int[indices.length];
+		// Get the face-indices (may be of length 3 or 4)
+		short[] face = new short[indices.length];
 		for (int i=0; i<indices.length; i++) {
-			face[i] = Integer.parseInt(indices[i]);
+			face[i] = Short.parseShort(indices[i]);
 		}
 		
-		mFaces.add(face);
+		// Divide the face if it's size is 4
+		if (face.length == 4) {
+			short[] face1 = new short[] {
+				face[0], face[1], face[2],
+			};
+			
+			short[] face2 = new short[] {
+				face[0], face[2], face[3],	
+			};
+			
+			mFaces.add(face1);
+			mFaces.add(face2);
+		} else {
+			mFaces.add(face);
+		}
 	}
 
 	private void parseTexCoord() {
@@ -176,6 +187,15 @@ public class ObjLoader {
 		}
 		
 		mTexCoord.add(texCoord);
+	}
+
+	private void parseNormal() {
+		float[] norm = new float[3];
+		for (int i=0; i<3; i++) {
+			norm[i] = Float.parseFloat(mFileScanner.next());
+		}
+		
+		mNormals.add(norm);
 	}
 }
 
