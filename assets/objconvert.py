@@ -107,4 +107,4 @@ def convert_obj(filename) :
     out.write("\n")
     i = 0
 
-convert_obj("USSEnterprise.obj")
+convert_obj(sys.argv(1))
