@@ -1,6 +1,6 @@
 from numpy import *
 import random
-
+import sys
 
 #util to unravel
 indexies = dict()
@@ -107,4 +107,4 @@ def convert_obj(filename) :
     out.write("\n")
     i = 0
 
-convert_obj(sys.argv(1))
+convert_obj(sys.argv[1])
