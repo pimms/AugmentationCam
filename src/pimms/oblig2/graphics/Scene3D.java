@@ -13,7 +13,7 @@ public class Scene3D {
 	private static final float[] sLightDiffuse = new float[] {1f, 1f, 1f, 1f};
 	private static final float[] sLightSpecular = new float[] {1f, 1f, 1f, 1f};
 	private static final float[] sLightPosition = new float[] {0f, 50f, 10f, 1f};
-	private static final float sLightAttConstant = 0.25f;
+	private static final float sLightAttConstant = 0.1f;
 	private static final float sLightAttLinear = 0f;
 	private static final float sLightAttQuadratic = 0f;
 	
