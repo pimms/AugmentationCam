@@ -153,15 +153,11 @@ public class AugmentationActivity extends Activity
 	public void OnMoved(int pan, int tilt) {
     	// pan and tilt refer to X and Y respectively, and their values
     	// exists in the domain {-10, 10}.
-		float diffX = (float)(pan) / 30f;
-		float diffZ = (float)(tilt) / 30f;
+		float diffX = (float)(pan) / 3000f;
+		float diffZ = (float)(tilt) / 3000f;
 		
 		lastX = pan;
 		lastZ = tilt;
-		// Normalize the values
-		//float magnitude = (float)Math.sqrt(diffX*diffX + diffZ*diffZ);
-		//diffX /= magnitude;
-		//diffZ /= magnitude;
 		
 		translateDevicePos(diffX, 0f, diffZ);
 	}
