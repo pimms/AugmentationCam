@@ -12,7 +12,7 @@ public class Scene3D {
 	private static final float[] sLightAmbient = new float[] {0.7f, 0.7f, 0.7f, 1f };
 	private static final float[] sLightDiffuse = new float[] {1f, 1f, 1f, 1f};
 	private static final float[] sLightSpecular = new float[] {1f, 1f, 1f, 1f};
-	private static final float[] sLightPosition = new float[] {0f, 50f, 10f, 1f};
+	private static final float[] sLightPosition = new float[] {0f, -1f, 0f, 0f};
 	private static final float sLightAttConstant = 0.1f;
 	private static final float sLightAttLinear = 0f;
 	private static final float sLightAttQuadratic = 0f;
@@ -45,7 +45,7 @@ public class Scene3D {
 		obj.setTextureId(R.drawable.enterprise_tex);
 		obj.init(gl);
 		mObjects.add(obj);
-		
+
 		obj = new Object3D(this, mContext, "Terrain.modobj");
 		obj.setTextureId(R.drawable.tertex);
 		obj.init(gl);

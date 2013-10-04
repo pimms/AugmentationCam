@@ -114,6 +114,12 @@ public class Object3D {
 	}
 	
 	public final void draw(GL10 gl) {
+		if (mScale != 1.0f) {
+			gl.glEnable(GL10.GL_NORMALIZE);
+		} else {
+			gl.glDisable(GL10.GL_NORMALIZE);
+		}
+		
 		gl.glPushMatrix();
 		gl.glTranslatef(mPosition[0], mPosition[1], mPosition[2]);
 		gl.glScalef(mScale, mScale, mScale);
