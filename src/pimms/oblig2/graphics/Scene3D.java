@@ -41,7 +41,7 @@ public class Scene3D {
 		
 		Object3D obj = new Object3D(this, mContext, "USSEnterprise.modobj");
 		obj.setScale(50f);
-		obj.setPosition(0f, 100f, 250f);
+		obj.setPosition(0f, 200f, 500f);
 		obj.setTextureId(R.drawable.enterprise_tex);
 		obj.init(gl);
 		mObjects.add(obj);
