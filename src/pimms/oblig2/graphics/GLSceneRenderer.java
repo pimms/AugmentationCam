@@ -12,14 +12,14 @@ public class GLSceneRenderer implements Renderer {
 	public static final double METERS_PER_LAT = 111412.24020000001;
 	
 	private float[] mRotEuler = new float[3];
-	private float[] mRotMatrix = new float[16];
 	private float[] mDevicePosition = new float[3];
 
 	private Context mContext;
 	private Scene3D mScene;
 	
-	public GLSceneRenderer(Context context) {
+	public GLSceneRenderer(Context context, Scene3DCallback sceneCallback) {
 		mContext = context;
+		mScene = new Scene3D(mContext, sceneCallback);
 	}
 	
 	public void onDrawFrame(GL10 gl) {
@@ -54,24 +54,9 @@ public class GLSceneRenderer implements Renderer {
     public void onSurfaceCreated( GL10 gl, EGLConfig config ) {
     	initGL(gl);
     	
-    	mScene = new Scene3D(gl, mContext);
+    	mScene.loadScene(gl);
     }  
 
-    public void setGyroMatrix(float[] rotMatrix) {
-    	for (int r=0; r<3; r++) {
-    		for (int c=0; c<3; c++) {
-    			mRotMatrix[r*4+c] = rotMatrix[r*3+c];
-    		}
-    	}
-    	
-    	mRotMatrix[3] = mRotMatrix[7] = 0f;
-    	mRotMatrix[15] = 1f;
-    	
-    	for (int i=11; i<=14; i++) {
-    		mRotMatrix[i] = 0f;
-    	}
-    } 
-    
     public void setRotationEuler(float x, float y, float z) {
     	mRotEuler[0] = x;
     	mRotEuler[1] = y;

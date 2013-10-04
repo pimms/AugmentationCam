@@ -19,25 +19,50 @@ public class Scene3D {
 	
 	private ArrayList<Object3D> mObjects;
 	private Context mContext;
+	private Scene3DCallback mCallback;
 	
-	public Scene3D(GL10 gl, Context context) {
+	/*
+	 * The load progress is calculated uniformly
+	 * based on the loaded models. A stupidly large
+	 * model accounts for the same amount of progress as a
+	 * small model. This is done for simplicity's sake.
+	 */
+	private int mObjectsToLoad = 2;
+	
+	public Scene3D(Context context, Scene3DCallback callback) {
 		mContext = context;
 		mObjects = new ArrayList<Object3D>();
 		
-		Object3D obj = new Object3D(mContext, "USSEnterprise.modobj");
+		mCallback = callback;
+	}
+	
+	public void loadScene(GL10 gl) {
+		mCallback.onScene3DLoadBegin();
+		
+		Object3D obj = new Object3D(this, mContext, "USSEnterprise.modobj");
 		obj.setScale(50f);
 		obj.setPosition(0f, 100f, 250f);
 		obj.setTextureId(R.drawable.enterprise_tex);
 		obj.init(gl);
 		mObjects.add(obj);
 		
-		obj = new Object3D(mContext, "Terrain.modobj");
+		obj = new Object3D(this, mContext, "Terrain.modobj");
 		obj.setTextureId(R.drawable.tertex);
 		obj.init(gl);
 		mObjects.add(obj);
 		
 		initLights(gl);
+		
+		mCallback.onScene3DLoadCompleted();
 	}
+	
+	public void setModelProgress(int progress) {
+		float completedPercent = ((float)mObjects.size() / (float)mObjectsToLoad) * 100f;
+		completedPercent += (float)progress / (float)mObjectsToLoad;
+		
+		mCallback.onScene3DLoadInProgress((int)completedPercent);
+	}
+	
 	
 	public void drawScene(GL10 gl) {
 		for (Object3D obj : mObjects) {

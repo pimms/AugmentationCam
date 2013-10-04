@@ -1,23 +1,15 @@
 package pimms.oblig2;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import pimms.oblig2.graphics.GLSceneRenderer;
-
+import pimms.oblig2.graphics.Scene3DCallback;
 import android.app.Activity;
-import android.app.ActionBar.LayoutParams;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -28,7 +20,14 @@ import android.widget.Button;
 public class AugmentationActivity extends Activity 
 			implements 	OnClickListener,
 						OrientationSensorListener,
-						JoystickMovedListener {
+						JoystickMovedListener,
+						Scene3DCallback {
+	
+	/*
+	 * Variables used in the implementation of Scene3DCallback.
+	 */
+	private Handler mHandler;
+	private ProgressDialog mProgress;
 	
 	private GLSurfaceView mGlView;
 	private GLSceneRenderer mRenderer;
@@ -40,6 +39,7 @@ public class AugmentationActivity extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHandler = new Handler();
         
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE );
         
@@ -53,7 +53,7 @@ public class AugmentationActivity extends Activity
         mGlView = (GLSurfaceView)findViewById(R.id.glView);
         mGlView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-        mRenderer = new GLSceneRenderer(this);
+        mRenderer = new GLSceneRenderer(this, this);
         mGlView.setRenderer(mRenderer);
         
         mDevicePosition = new float[] { -10f, 1.5f, 0f };
@@ -87,53 +87,6 @@ public class AugmentationActivity extends Activity
     	mSensors.beginReading();
     }
     
-    @Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.button_down:
-			translateDevicePos(0f, -1f, 0f);
-			break;
-			
-		case R.id.button_up:
-			translateDevicePos(0f, 1f, 0f);
-			break;
-		}
-		
-		mRenderer.setDeviceLocation(mDevicePosition);
-	}
-    
-    @Override
-	public void OnMoved(int pan, int tilt) {
-    	// pan and tilt refer to X and Y respectively, and their values
-    	// exists in the domain {-10, 10}.
-		float diffX = (float)(pan) / 30f;
-		float diffZ = (float)(tilt) / 30f;
-		
-		// Normalize the values
-		//float magnitude = (float)Math.sqrt(diffX*diffX + diffZ*diffZ);
-		//diffX /= magnitude;
-		//diffZ /= magnitude;
-		
-		translateDevicePos(diffX, 0f, diffZ);
-	}
-
-	@Override
-	public void OnReleased() {
-		
-	}
-    
-    public void onOrientationDataReady(float[] fusedOrientation) {
-    	mFusedOrientation = fusedOrientation;
-    	
-    	mRenderer.setRotationEuler(
-	    	(float)Math.toDegrees(fusedOrientation[0]),
-	    	(float)Math.toDegrees(fusedOrientation[1]),
-	    	(float)Math.toDegrees(fusedOrientation[2])
-	    );
-    	
-    	mRenderer.setDeviceLocation(mDevicePosition);
-    }
-    
     
     private void translateDevicePos(float x, float y, float z) {
     	if (mFusedOrientation == null) {
@@ -160,4 +113,138 @@ public class AugmentationActivity extends Activity
     	JoystickView joystick = (JoystickView)findViewById(R.id.joystick);
     	joystick.setOnJoystickMovedListener(this);
     }
+
+    
+    /*
+	 * OrientationSensorListener implementation
+	 */
+    public void onOrientationDataReady(float[] fusedOrientation) {
+    	mFusedOrientation = fusedOrientation;
+    	
+    	mRenderer.setRotationEuler(
+	    	(float)Math.toDegrees(fusedOrientation[0]),
+	    	(float)Math.toDegrees(fusedOrientation[1]),
+	    	(float)Math.toDegrees(fusedOrientation[2])
+	    );
+    	
+    	mRenderer.setDeviceLocation(mDevicePosition);
+    }
+    
+    /*
+     * JoystickMovedListener implementation
+     */
+    @Override
+	public void OnMoved(int pan, int tilt) {
+    	// pan and tilt refer to X and Y respectively, and their values
+    	// exists in the domain {-10, 10}.
+		float diffX = (float)(pan) / 30f;
+		float diffZ = (float)(tilt) / 30f;
+		
+		// Normalize the values
+		//float magnitude = (float)Math.sqrt(diffX*diffX + diffZ*diffZ);
+		//diffX /= magnitude;
+		//diffZ /= magnitude;
+		
+		translateDevicePos(diffX, 0f, diffZ);
+	}
+
+	@Override
+	public void OnReleased() {
+		
+	}
+	
+	/*
+	 * OnClickListener implementation
+	 */
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.button_down:
+			translateDevicePos(0f, -1f, 0f);
+			break;
+			
+		case R.id.button_up:
+			translateDevicePos(0f, 1f, 0f);
+			break;
+		}
+		
+		mRenderer.setDeviceLocation(mDevicePosition);
+	}
+	
+	/*
+	 * Scene3DCallback implementation
+	 */
+	@Override
+	public void onScene3DLoadBegin() {
+		final Context context = this;
+		
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				mProgress = new ProgressDialog(context);
+				mProgress.setTitle("Loading scene");
+				mProgress.setMessage("0%");
+				mProgress.setCancelable(false);
+				mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				mProgress.show();
+			}
+		};
+		
+		mHandler.post(runnable);
+	}
+	
+	@Override
+	public void onScene3DLoadInProgress(final int progress) {
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				mProgress.setMessage(progress + "%");
+			}
+		};
+		
+		mHandler.post(runnable);
+	}
+	
+	@Override
+	public void onScene3DLoadCompleted() {
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				mProgress.dismiss();
+			}
+		};
+		
+		mHandler.post(runnable);
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

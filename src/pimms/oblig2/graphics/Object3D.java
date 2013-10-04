@@ -34,18 +34,21 @@ public class Object3D {
 	protected float[] mPosition;
 	protected float mScale = 1f;
 	protected Context mContext;
+	protected Scene3D mScene;
 	
-	public Object3D(Context context, String fileName) {
+	public Object3D(Scene3D scene, Context context, String fileName) {
 		setPosition(0f, 0f, 0f);
 		mContext = context;
 		mFileName = fileName;
 		mObjLoader = new ObjLoader();
+		mScene = scene;
 	}
 	
 	/** 
 	 * setTexture() 
 	 * 	@param textureId  	The R-id of the texture resource.
-	 * This method must be called before init(GL10).
+	 * This method must be called before init(GL10) if a texture
+	 * should be used.
 	 */
 	public void setTextureId(int textureRId) {
 		mTextureRId = textureRId;
@@ -57,8 +60,13 @@ public class Object3D {
 			return;
 		}
 		
+		mScene.setModelProgress(80);
+		
 		loadVertexData();
+		mScene.setModelProgress(90);
+		
 		loadTexcoordData(gl);
+		mScene.setModelProgress(100);
 	}
 	
 	
