@@ -122,7 +122,7 @@ public class AugmentationActivity extends Activity
     	
     	JoystickView joystick = (JoystickView)findViewById(R.id.joystick);
     	joystick.setOnJoystickMovedListener(this);
-    	joystick.setOnTouchListener(new RepeatListener(400, 100, new OnClickListener() {
+    	joystick.setOnTouchListener(new RepeatListener(0, 0, new OnClickListener() {
     		@Override
     		public void onClick(View view) {
     			OnMoved(lastX, lastZ);
