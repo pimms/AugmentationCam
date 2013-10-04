@@ -36,6 +36,8 @@ public class AugmentationActivity extends Activity
 	private float[] mFusedOrientation;
 	private float[] mDevicePosition;
 	
+	private int lastX, lastZ;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,7 +124,13 @@ public class AugmentationActivity extends Activity
     	
     	JoystickView joystick = (JoystickView)findViewById(R.id.joystick);
     	joystick.setOnJoystickMovedListener(this);
-    }
+    	joystick.setOnTouchListener(new RepeatListener(400, 100, new OnClickListener() {
+    		@Override
+    		public void onClick(View view) {
+    			OnMoved(lastX, lastZ);
+    			}
+    		}));
+    	}
 
     
     /*
@@ -150,6 +158,8 @@ public class AugmentationActivity extends Activity
 		float diffX = (float)(pan) / 30f;
 		float diffZ = (float)(tilt) / 30f;
 		
+		lastX = pan;
+		lastZ = tilt;
 		// Normalize the values
 		//float magnitude = (float)Math.sqrt(diffX*diffX + diffZ*diffZ);
 		//diffX /= magnitude;
