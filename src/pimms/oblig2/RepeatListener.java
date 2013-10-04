@@ -59,11 +59,11 @@ public class RepeatListener implements OnTouchListener {
             handler.postDelayed(handlerRunnable, initialInterval);
             downView = view;
             clickListener.onClick(view);
-            return true;
+            break;
         case MotionEvent.ACTION_UP:
             handler.removeCallbacks(handlerRunnable);
             downView = null;
-            return true;
+            break;
         }
         return false;
     }
