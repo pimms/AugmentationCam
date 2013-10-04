@@ -39,6 +39,11 @@ public class Scene3D {
 	public void loadScene(GL10 gl) {
 		mCallback.onScene3DLoadBegin();
 		
+		/* It has literally taken me until 23:00 the night of delivery
+		 * to realize that normals are affected by glScalex. Now that
+		 * I enabled GL_NORMALIZE, I realized that some normals in the
+		 * Enterprise model are inverted. I may never fix it.
+		 */
 		Object3D obj = new Object3D(this, mContext, "USSEnterprise.modobj");
 		obj.setScale(50f);
 		obj.setPosition(0f, 200f, 500f);
