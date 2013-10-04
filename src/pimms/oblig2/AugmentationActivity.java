@@ -196,7 +196,7 @@ public class AugmentationActivity extends Activity
 			@Override
 			public void run() {
 				mProgress = new ProgressDialog(context);
-				mProgress.setTitle("Loading scene");
+				mProgress.setTitle(getResources().getString(R.string.loading));
 				mProgress.setMessage("0%");
 				mProgress.setCancelable(false);
 				mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);

@@ -9,6 +9,7 @@
     <string name="main_btn_go">Go!</string>
     <string name="button_down">Down</string>
     <string name="button_up">Up</string>
+    <string name="loading">Loading scene</string>
     
     
 </resources>
