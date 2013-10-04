@@ -23,9 +23,7 @@ public class AugmentationActivity extends Activity
 						JoystickMovedListener,
 						Scene3DCallback {
 	
-	/*
-	 * Variables used in the implementation of Scene3DCallback.
-	 */
+	/* Variables used in the implementation of Scene3DCallback */
 	private Handler mHandler;
 	private ProgressDialog mProgress;
 	
