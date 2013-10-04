@@ -7,6 +7,8 @@
     
     <string name="main_desc">Use the on-screen buttons to navigate the environment. Look around you by rotating device.</string>
     <string name="main_btn_go">Go!</string>
+    <string name="button_down">Down</string>
+    <string name="button_up">Up</string>
     
     
 </resources>

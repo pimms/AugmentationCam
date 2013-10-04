@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="Down" />
+        android:text="@string/button_down" />
 
     <Button
         android:id="@+id/button_up"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="Up" />
+        android:text="@string/button_up" />
 
     <pimms.oblig2.JoystickView
         android:id="@+id/joystick"

@@ -7,6 +7,8 @@
     
     <string name="main_desc">Bruk knappene på skjermen til å bevege deg rundt. Se omkring deg ved å rotere enhten din.</string>
     <string name="main_btn_go">La oss gå, kamerater!</string>
+    <string name="button_down">Ned</string>
+    <string name="button_up">Opp</string>
     
     
     
