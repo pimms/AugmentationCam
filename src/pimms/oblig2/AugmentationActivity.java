@@ -107,16 +107,16 @@ public class AugmentationActivity extends Activity
     }
     
     private void initButtonListeners() {
-    	((Button)findViewById(R.id.button_up)).setOnTouchListener(new RepeatListener(400, 100, new OnClickListener() {
+    	((Button)findViewById(R.id.button_up)).setOnTouchListener(new RepeatListener(0, 0, new OnClickListener() {
     		  @Override
     		  public void onClick(View view) {
-    		    translateDevicePos(0f, 1f, 0f);
+    		    translateDevicePos(0f, 0.001f, 0f);
     		  }
     		}));
-    	((Button)findViewById(R.id.button_down)).setOnTouchListener(new RepeatListener(400, 100, new OnClickListener() {
+    	((Button)findViewById(R.id.button_down)).setOnTouchListener(new RepeatListener(0, 0, new OnClickListener() {
     		  @Override
     		  public void onClick(View view) {
-    		    translateDevicePos(0f, -1f, 0f);
+    		    translateDevicePos(0f, -0.001f, 0f);
     		  }
     		}));
     	
