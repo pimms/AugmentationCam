@@ -110,13 +110,13 @@ public class AugmentationActivity extends Activity
     	((Button)findViewById(R.id.button_up)).setOnTouchListener(new RepeatListener(0, 0, new OnClickListener() {
     		  @Override
     		  public void onClick(View view) {
-    		    translateDevicePos(0f, 0.001f, 0f);
+    		    translateDevicePos(0f, 0.0005f, 0f);
     		  }
     		}));
     	((Button)findViewById(R.id.button_down)).setOnTouchListener(new RepeatListener(0, 0, new OnClickListener() {
     		  @Override
     		  public void onClick(View view) {
-    		    translateDevicePos(0f, -0.001f, 0f);
+    		    translateDevicePos(0f, -0.0005f, 0f);
     		  }
     		}));
     	
@@ -153,8 +153,8 @@ public class AugmentationActivity extends Activity
 	public void OnMoved(int pan, int tilt) {
     	// pan and tilt refer to X and Y respectively, and their values
     	// exists in the domain {-10, 10}.
-		float diffX = (float)(pan) / 3000f;
-		float diffZ = (float)(tilt) / 3000f;
+		float diffX = (float)(pan) / 20000f;
+		float diffZ = (float)(tilt) / 20000f;
 		
 		lastX = pan;
 		lastZ = tilt;
